@@ -50,7 +50,7 @@ export function POSHeader({ cartCount, tableNumber, onCartClick }: HeaderProps) 
 
         {/* Mobile Menu */}
         <div className="flex items-center gap-2 md:hidden">
-          <span className="rounded-full bg-[#ebece7] px-3 py-2 text-xs font-semibold">Table 07</span>
+          <span className="rounded-full bg-[#ebece7] px-3 py-2 text-xs font-semibold">Table {tableNumber}</span>
           <button
             onClick={onCartClick}
             className="relative rounded-full bg-white p-2.5 shadow-sm"
