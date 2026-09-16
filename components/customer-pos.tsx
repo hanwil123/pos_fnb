@@ -17,37 +17,16 @@ import { TableResponse } from '@/type/tableRepsonse'
 
 
 interface CustomerPOSProps {
-  qrToken: string;
+  table: TableResponse | null;
 }
-export function CustomerPOS({ qrToken }: CustomerPOSProps) {
+export function CustomerPOS({ table }: CustomerPOSProps) {
+
   const [category, setCategory] = useState<Category>('All menu')
   const [query, setQuery] = useState('')
   const [showCart, setShowCart] = useState(false)
   const [showAI, setShowAI] = useState(false)
   const [added, setAdded] = useState<string | null>(null)
-  const [table, setTable] = useState<TableResponse | null>(null)
   const { items, add } = useCart()
-
-  const qrTokenData = qrToken
-
-  useEffect(() => {
-    // Pastikan token sudah terbaca sebelum fetch ke backend Go
-    if (!qrTokenData) return;
-
-    // 2. Fetch data meja & menu ke backend Go Anda
-    fetch(`http://localhost:8080/api/v1/table/${qrTokenData}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('QR Code tidak valid atau meja tidak ditemukan');
-        return res.json();
-      })
-      .then((data) => {
-        console.log("data table : ", data)
-        setTable(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-  }, [qrToken]);
 
   const filteredMenu = useMemo(
     () => MENU.filter((item) =>
@@ -67,9 +46,9 @@ export function CustomerPOS({ qrToken }: CustomerPOSProps) {
 
   return (
     <main className="min-h-screen bg-[#f7f7f5] text-[#202420]">
-      <POSHeader tableNumber={table?.table_number || ''} cartCount={count} onCartClick={() => setShowCart(true)} />
+      <POSHeader tableNumber={table?.table.table_number || ''} cartCount={count} onCartClick={() => setShowCart(true)} />
       <div className="mx-auto max-w-[1400px] px-5 pb-16 lg:px-10">
-        <HeroSection />
+        <HeroSection tableNumber={table?.table.table_number || ''} />
         <MenuFilter
           category={category}
           onCategoryChange={setCategory}

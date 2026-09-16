@@ -1,6 +1,10 @@
 import { Clock3, Sparkles } from 'lucide-react'
 
-export function HeroSection() {
+
+interface HeroProps {
+  tableNumber: string;
+}
+export function HeroSection({ tableNumber }: HeroProps) {
   return (
     <section className="relative mt-8 overflow-hidden rounded-[28px] bg-[#173d34] px-7 py-8 text-white sm:px-10 sm:py-10 lg:mt-10 lg:min-h-[254px] lg:px-14">
       <div className="relative z-10 max-w-[530px]">
@@ -13,7 +17,7 @@ export function HeroSection() {
           <em className="text-[#e7a982]">good mood.</em>
         </h1>
         <p className="mt-4 max-w-[400px] text-sm leading-6 text-[#b6c8bb]">
-          Take your time. We&apos;ll bring your favorites straight to Table 07.
+          Take your time. We&apos;ll bring your favorites straight to Table {tableNumber}.
         </p>
       </div>
       <div className="hero-art" aria-hidden="true">
@@ -26,7 +30,7 @@ export function HeroSection() {
         <p className="mb-1 flex items-center justify-end gap-1">
           <Clock3 size={13} /> Open until 10 PM
         </p>
-        <p className="text-[#e7a982]">Dine-in · Table 07</p>
+        <p className="text-[#e7a982]">Dine-in · Table {tableNumber}</p>
       </div>
     </section>
   )

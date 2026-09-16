@@ -1,4 +1,8 @@
 export interface TableResponse {
+    table : TableData
+}
+
+export interface TableData {
     id : string
     restaurant_id : string
     table_number : string | null
