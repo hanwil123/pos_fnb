@@ -9,7 +9,7 @@ export default async function Page({
 }) {
   const { qr_token } = await params
 
-  const res = await fetch(`http://localhost:8080/api/v1/table/${qr_token}`, {
+  const res = await fetch(`https://d66f-180-251-183-213.ngrok-free.app/api/v1/table/${qr_token}`, {
     cache: 'no-store',
   })
   if (!res.ok) notFound()
