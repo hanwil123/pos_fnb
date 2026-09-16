@@ -1,6 +1,14 @@
-import { CustomerPOS } from "@/components/[qr_token]/customer-pos";
+import { CustomerPOS } from "@/components/customer-pos";
 
 
-export default function Page() {
-  return <CustomerPOS />
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    qr_token?: string;
+  }>;
+}) {
+  const params = await searchParams;
+
+  return <CustomerPOS qrToken={params.qr_token} />;
 }

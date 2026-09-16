@@ -4,18 +4,22 @@ import { useEffect, useMemo, useState } from 'react'
 import { useCart } from '@/lib/store'
 import { MENU, type Category, type MenuItem } from '@/lib/constants'
 import { formatCurrency } from '@/lib/utils-format'
-import { POSHeader } from '../pos/header'
-import { HeroSection } from '../pos/hero-section'
-import { MenuFilter } from '../pos/menu-filter'
-import { MenuGrid } from '../pos/menu-grid'
-import { PromoSection } from '../pos/promo-section'
-import { OrderBar } from '../pos/order-bar'
-import { CartDrawer } from '../pos/cart-drawer'
-import { AIAssistant } from '../pos/ai-assistant'
+import { POSHeader } from './pos/header'
+import { HeroSection } from './pos/hero-section'
+import { MenuFilter } from './pos/menu-filter'
+import { MenuGrid } from './pos/menu-grid'
+import { PromoSection } from './pos/promo-section'
+import { OrderBar } from './pos/order-bar'
+import { CartDrawer } from './pos/cart-drawer'
+import { AIAssistant } from './pos/ai-assistant'
 import { useParams } from 'next/navigation'
 import { TableResponse } from '@/type/tableRepsonse'
 
-export function CustomerPOS() {
+
+interface CustomerPOSProps {
+  qrToken: string;
+}
+export function CustomerPOS({ qrToken }: CustomerPOSProps) {
   const [category, setCategory] = useState<Category>('All menu')
   const [query, setQuery] = useState('')
   const [showCart, setShowCart] = useState(false)
@@ -23,21 +27,21 @@ export function CustomerPOS() {
   const [added, setAdded] = useState<string | null>(null)
   const [table, setTable] = useState<TableResponse | null>(null)
   const { items, add } = useCart()
-  const params = useParams()
 
-  const qrToken = params.qr_token
+  const qrTokenData = qrToken
 
   useEffect(() => {
     // Pastikan token sudah terbaca sebelum fetch ke backend Go
-    if (!qrToken) return;
+    if (!qrTokenData) return;
 
     // 2. Fetch data meja & menu ke backend Go Anda
-    fetch(`http://localhost:8080/api/table/${qrToken}`)
+    fetch(`http://localhost:8080/api/v1/table/${qrTokenData}`)
       .then((res) => {
         if (!res.ok) throw new Error('QR Code tidak valid atau meja tidak ditemukan');
         return res.json();
       })
       .then((data) => {
+        console.log("data table : ", data)
         setTable(data);
       })
       .catch((err) => {
