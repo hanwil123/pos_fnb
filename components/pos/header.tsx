@@ -4,10 +4,11 @@ import { Bell, ChevronDown, Coffee, ShoppingBag } from 'lucide-react'
 
 interface HeaderProps {
   cartCount: number
+  tableNumber: string
   onCartClick: () => void
 }
 
-export function POSHeader({ cartCount, onCartClick }: HeaderProps) {
+export function POSHeader({ cartCount, tableNumber, onCartClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-[#e7e7e1] bg-[#f7f7f5]/95 backdrop-blur">
       <div className="mx-auto flex h-[74px] max-w-[1400px] items-center justify-between px-5 lg:px-10">
@@ -30,7 +31,7 @@ export function POSHeader({ cartCount, onCartClick }: HeaderProps) {
         <div className="hidden items-center gap-3 text-sm font-medium text-[#6d746d] md:flex">
           <span className="flex items-center gap-2 rounded-full bg-[#ebece7] px-4 py-2">
             <span className="size-2 rounded-full bg-[#4d9a72]" />
-            Table 07 <ChevronDown size={14} />
+            Table {tableNumber} <ChevronDown size={14} />
           </span>
           <button
             className="rounded-full p-2 transition hover:bg-[#e9eae5]"

@@ -1,17 +1,19 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useCart } from '@/lib/store'
 import { MENU, type Category, type MenuItem } from '@/lib/constants'
 import { formatCurrency } from '@/lib/utils-format'
-import { POSHeader } from './pos/header'
-import { HeroSection } from './pos/hero-section'
-import { MenuFilter } from './pos/menu-filter'
-import { MenuGrid } from './pos/menu-grid'
-import { PromoSection } from './pos/promo-section'
-import { OrderBar } from './pos/order-bar'
-import { CartDrawer } from './pos/cart-drawer'
-import { AIAssistant } from './pos/ai-assistant'
+import { POSHeader } from '../pos/header'
+import { HeroSection } from '../pos/hero-section'
+import { MenuFilter } from '../pos/menu-filter'
+import { MenuGrid } from '../pos/menu-grid'
+import { PromoSection } from '../pos/promo-section'
+import { OrderBar } from '../pos/order-bar'
+import { CartDrawer } from '../pos/cart-drawer'
+import { AIAssistant } from '../pos/ai-assistant'
+import { useParams } from 'next/navigation'
+import { TableResponse } from '@/type/tableRepsonse'
 
 export function CustomerPOS() {
   const [category, setCategory] = useState<Category>('All menu')
@@ -19,7 +21,29 @@ export function CustomerPOS() {
   const [showCart, setShowCart] = useState(false)
   const [showAI, setShowAI] = useState(false)
   const [added, setAdded] = useState<string | null>(null)
+  const [table, setTable] = useState<TableResponse | null>(null)
   const { items, add } = useCart()
+  const params = useParams()
+
+  const qrToken = params.qr_token
+
+  useEffect(() => {
+    // Pastikan token sudah terbaca sebelum fetch ke backend Go
+    if (!qrToken) return;
+
+    // 2. Fetch data meja & menu ke backend Go Anda
+    fetch(`http://localhost:8080/api/table/${qrToken}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('QR Code tidak valid atau meja tidak ditemukan');
+        return res.json();
+      })
+      .then((data) => {
+        setTable(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }, [qrToken]);
 
   const filteredMenu = useMemo(
     () => MENU.filter((item) =>
@@ -39,7 +63,7 @@ export function CustomerPOS() {
 
   return (
     <main className="min-h-screen bg-[#f7f7f5] text-[#202420]">
-      <POSHeader cartCount={count} onCartClick={() => setShowCart(true)} />
+      <POSHeader tableNumber={table?.table_number || ''} cartCount={count} onCartClick={() => setShowCart(true)} />
       <div className="mx-auto max-w-[1400px] px-5 pb-16 lg:px-10">
         <HeroSection />
         <MenuFilter
